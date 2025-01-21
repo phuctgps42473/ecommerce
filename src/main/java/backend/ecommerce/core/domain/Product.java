@@ -13,7 +13,7 @@ import java.util.Date;
 @Data
 @Table(name = "products")
 @Entity
-public class Product extends DomainObject{
+public class Product extends DomainObject {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private ProductCategory productCategory;
@@ -30,14 +30,6 @@ public class Product extends DomainObject{
     @Column(name = "sku", nullable = false)
     private String sku;
 
-    @CreationTimestamp
-    @Column(name = "added_date", nullable = false)
-    private Date addedDate;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private Date updatedAt;
-
     @Column(name = "stock_quantity")
     private Integer stockQuantity;
 
@@ -46,4 +38,25 @@ public class Product extends DomainObject{
 
     @Column(name = "weight")
     private Double weight;
+
+    @CreationTimestamp
+    @Column(name = "added_date", nullable = false)
+    private Date addedDate;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private Date updatedAt;
+
+
+    public Product(ProductCategory productCategory, String productName, Double price, Double costPrice, String sku,
+                   int stockQuantity, String description, Double weight) {
+        this.setProductCategory(productCategory);
+        this.setProductName(productName);
+        this.setPrice(price);
+        this.setCostPrice(costPrice);
+        this.setSku(sku);
+        this.setStockQuantity(stockQuantity);
+        this.setDescription(description);
+        this.setWeight(weight);
+    }
 }

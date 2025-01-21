@@ -84,7 +84,7 @@ public class JWTProvider {
 
         User principal = new User(claims.getSubject(), "", authorities);
 
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+        return new UsernamePasswordAuthenticationToken(principal, null, authorities);
     }
 
     public Claims parseClaims(String token) {

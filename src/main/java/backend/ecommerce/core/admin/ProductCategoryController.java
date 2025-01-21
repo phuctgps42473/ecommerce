@@ -1,6 +1,5 @@
 package backend.ecommerce.core.admin;
 
-import backend.ecommerce.core.ProductCategory;
 import backend.ecommerce.core.dto.ProductCategoryDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

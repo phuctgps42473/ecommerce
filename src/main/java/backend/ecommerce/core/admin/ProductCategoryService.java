@@ -1,9 +1,11 @@
 package backend.ecommerce.core.admin;
 
-import backend.ecommerce.core.ProductCategory;
+import backend.ecommerce.core.domain.ProductCategory;
 import backend.ecommerce.core.dto.ProductCategoryDTO;
 import backend.ecommerce.core.repository.ProductCategoryRepository;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AdminProductCategoryService {
 
     private final ProductCategoryRepository productCategoryRepository;
@@ -12,15 +14,19 @@ public class AdminProductCategoryService {
         this.productCategoryRepository = productCategoryRepository;
     }
 
-    public void createNewProductCategory(ProductCategoryDTO dto) {
+    public ProductCategory createNewProductCategory(ProductCategoryDTO dto) {
         ProductCategory productCategory = new ProductCategory(dto.name(), dto.description());
-        this.productCategoryRepository.save(productCategory);
+        return this.productCategoryRepository.save(productCategory);
     }
 
     public void updateProductCategory(ProductCategory productCategory, ProductCategoryDTO dto) {
         productCategory.setName(dto.name());
         productCategory.setDescription(dto.description());
         this.productCategoryRepository.save(productCategory);
+    }
+
+    public void deleteProductCategory(Long productCategoryId) {
+        this.productCategoryRepository.deleteById(productCategoryId);
     }
 
 }
