@@ -1,9 +1,12 @@
-package backend.ecommerce.core;
+package backend.ecommerce.core.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
@@ -14,8 +17,12 @@ import java.util.Date;
 @Table(name = "products")
 @Entity
 public class Product extends DomainObject {
+    @JsonIgnore
+    public static String ENTITY_NAME = "product";
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "category_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private ProductCategory productCategory;
 
     @Column(name = "product_name", nullable = false)
@@ -46,17 +53,4 @@ public class Product extends DomainObject {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Date updatedAt;
-
-
-    public Product(ProductCategory productCategory, String productName, Double price, Double costPrice, String sku,
-                   int stockQuantity, String description, Double weight) {
-        this.setProductCategory(productCategory);
-        this.setProductName(productName);
-        this.setPrice(price);
-        this.setCostPrice(costPrice);
-        this.setSku(sku);
-        this.setStockQuantity(stockQuantity);
-        this.setDescription(description);
-        this.setWeight(weight);
-    }
 }

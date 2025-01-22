@@ -1,4 +1,4 @@
-package backend.ecommerce.core;
+package backend.ecommerce.core.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
