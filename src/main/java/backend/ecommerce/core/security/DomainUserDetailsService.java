@@ -1,6 +1,6 @@
 package backend.ecommerce.core.security;
 
-import backend.ecommerce.core.User;
+import backend.ecommerce.core.domain.User;
 import backend.ecommerce.core.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

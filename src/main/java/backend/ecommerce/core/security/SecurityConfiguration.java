@@ -1,15 +1,14 @@
 package backend.ecommerce.core.security;
 
+import backend.ecommerce.core.domain.UserRole;
 import backend.ecommerce.core.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -31,11 +30,14 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         authorizeHttp -> {
+
                             authorizeHttp.requestMatchers("/api/register/**").permitAll();
                             authorizeHttp.requestMatchers("/api/authenticate/**").permitAll();
                             authorizeHttp.requestMatchers("/login/*").permitAll();
                             authorizeHttp.requestMatchers("/api/public/**").permitAll();
-//                            authorizeHttp.requestMatchers("/api/admin/**").hasRole(UserRole.admin.name()).anyRequest().authenticated();
+
+                            authorizeHttp.requestMatchers("/api/admin/**").hasAuthority("admin");
+
                             authorizeHttp.anyRequest().authenticated();
                         }
                 )

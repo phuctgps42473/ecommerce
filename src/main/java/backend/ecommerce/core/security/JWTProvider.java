@@ -37,16 +37,6 @@ public class JWTProvider {
         key = Keys.hmacShaKeyFor(JWT_SECRET_BASE64.getBytes());
     }
 
-    private boolean validateToken(String token) {
-        try {
-            parseClaims(token);
-            return true;
-        } catch (Exception ex) {
-            log.trace("Parse token failed", ex);
-            return false;
-        }
-    }
-
     public String createAccessToken(Authentication authentication) {
         long now = (new Date()).getTime();
         Date validity = new Date(now + ACCESS_TOKEN_EXPIRES_IN_SECONDS * 1000);
@@ -78,13 +68,17 @@ public class JWTProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        Claims claims = parseClaims(token);
+        try {
+            Claims claims = parseClaims(token);
+            List<? extends GrantedAuthority> authorities = Arrays.stream(claims.get("auth").toString().split(",")).map(SimpleGrantedAuthority::new).toList();
 
-        List<? extends GrantedAuthority> authorities = Arrays.stream(claims.get("auth").toString().split(",")).map(SimpleGrantedAuthority::new).toList();
+            User principal = new User(claims.getSubject(), "", authorities);
 
-        User principal = new User(claims.getSubject(), "", authorities);
-
-        return new UsernamePasswordAuthenticationToken(principal, null, authorities);
+            return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+        } catch (Exception ex) {
+            log.error("Get authentication error: ", ex);
+            return null;
+        }
     }
 
     public Claims parseClaims(String token) {
