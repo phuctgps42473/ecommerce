@@ -24,17 +24,43 @@ import java.util.stream.Collectors;
 public class JWTProvider {
     private static final Logger log = LoggerFactory.getLogger(JWTProvider.class);
 
-    private final long ACCESS_TOKEN_EXPIRES_IN_SECONDS = 1800;
-    private final long REFRESH_TOKEN_EXPIRES_IN_SECONDS = 86400;
-    private final long REFRESH_TOKEN_EXPIRES_IN_SECONDS_FOR_REMEMBER_ME = 2592000;
+    public final long ACCESS_TOKEN_EXPIRES_IN_SECONDS = 1800;
+    public final long REFRESH_TOKEN_EXPIRES_IN_SECONDS = 604800;
+    public final long REFRESH_TOKEN_EXPIRES_IN_SECONDS_FOR_REMEMBER_ME = 2592000;
 
-    @Value("${JWT_SECRET_BASE64}")
-    private String JWT_SECRET_BASE64;
-    private SecretKey key;
+    @Value("${jwt.access-token-secret}")
+    private String accessTokenSecret;
+
+    @Value("${jwt.refresh-token-secret}")
+    private String refreshTokenSecret;
+
+    private SecretKey accessKey, refreshKey;
 
     @PostConstruct
     public void init() {
-        key = Keys.hmacShaKeyFor(JWT_SECRET_BASE64.getBytes());
+        accessKey = Keys.hmacShaKeyFor(accessTokenSecret.getBytes());
+        refreshKey = Keys.hmacShaKeyFor(refreshTokenSecret.getBytes());
+    }
+
+    public boolean validateRefreshToken(String refreshToken) {
+        try {
+            parseClaims(refreshToken, TokenType.REFRESH_TOKEN);
+            return true;
+        } catch (Exception ex) {
+            return false;
+
+        }
+    }
+
+
+    public boolean validateAccessToken(String accessToken) {
+        try {
+            parseClaims(accessToken,TokenType.ACCESS_TOKEN);
+            return true;
+        } catch (Exception ex) {
+            return false;
+
+        }
     }
 
     public String createAccessToken(Authentication authentication) {
@@ -45,31 +71,28 @@ public class JWTProvider {
 
         return Jwts.builder()
                 .subject(authentication.getName())
-                .claim("auth", authorities)
+                .claim("role", authorities)
                 .issuedAt(new Date())
-                .signWith(key)
+                .signWith(accessKey)
                 .expiration(validity)
                 .compact();
     }
 
-    public String createFreshToken(Authentication authentication, boolean rememberMe) {
+    public String createRefreshToken(Authentication authentication, boolean rememberMe) {
         long now = (new Date()).getTime();
         Date validity = new Date(now + (getRefreshTokenValidity(rememberMe)));
 
-        String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
-
         return Jwts.builder()
                 .subject(authentication.getName())
-                .claim("auth", authorities)
                 .issuedAt(new Date())
-                .signWith(key)
+                .signWith(refreshKey)
                 .expiration(validity)
                 .compact();
     }
 
     public Authentication getAuthentication(String token) {
         try {
-            Claims claims = parseClaims(token);
+            Claims claims = parseClaims(token, TokenType.ACCESS_TOKEN);
             List<? extends GrantedAuthority> authorities = Arrays.stream(claims.get("auth").toString().split(",")).map(SimpleGrantedAuthority::new).toList();
 
             User principal = new User(claims.getSubject(), "", authorities);
@@ -81,8 +104,12 @@ public class JWTProvider {
         }
     }
 
-    public Claims parseClaims(String token) {
-        return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
+    public Claims parseClaims(String token, TokenType tokenType) {
+        if (tokenType.equals(TokenType.ACCESS_TOKEN)) {
+            return Jwts.parser().verifyWith(accessKey).build().parseSignedClaims(token).getPayload();
+        } else {
+            return Jwts.parser().verifyWith(refreshKey).build().parseSignedClaims(token).getPayload();
+        }
     }
 
     public long getRefreshTokenValidity(boolean rememberMe) {

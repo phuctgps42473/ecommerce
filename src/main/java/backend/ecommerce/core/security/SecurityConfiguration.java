@@ -1,6 +1,5 @@
 package backend.ecommerce.core.security;
 
-import backend.ecommerce.core.domain.UserRole;
 import backend.ecommerce.core.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,22 +16,35 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
-    private final JWTProvider jwtUtils;
+    private final JWTProvider jwtProvider;
 
-    public SecurityConfiguration(JWTProvider jwtUtils) {
-        this.jwtUtils = jwtUtils;
+    public SecurityConfiguration(JWTProvider jwtProvider) {
+        this.jwtProvider = jwtProvider;
     }
+
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration config = new CorsConfiguration();
+//        config.setAllowedOrigins(List.of("http://localhost:5173")); // Remix origin
+//        config.setAllowedMethods(List.of("*"));
+//        config.setAllowedHeaders(List.of("*"));
+//        config.setAllowCredentials(true); // ← Crucial for cookies
+//        config.setExposedHeaders(List.of("Set-Cookie", "Cookie")); // ← Expose cookies
+//        return (req) -> config;
+//    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+//                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         authorizeHttp -> {
 
-                            authorizeHttp.requestMatchers("/api/register/**").permitAll();
-                            authorizeHttp.requestMatchers("/api/authenticate/**").permitAll();
+                            authorizeHttp.requestMatchers("/api/register").permitAll();
+                            authorizeHttp.requestMatchers("/api/authenticate").permitAll();
+                            authorizeHttp.requestMatchers("/api/oauth/code_grant/**").permitAll();
+                            authorizeHttp.requestMatchers("/api/refresh-token").permitAll();
                             authorizeHttp.requestMatchers("/login/*").permitAll();
                             authorizeHttp.requestMatchers("/api/public/**").permitAll();
 
@@ -41,7 +53,7 @@ public class SecurityConfiguration {
                             authorizeHttp.anyRequest().authenticated();
                         }
                 )
-                .addFilterBefore(new JWTFilter(jwtUtils), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JWTFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
@@ -50,17 +62,8 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return new DomainUserDetailsService(userRepository);
-    }
-
 //    @Bean
-//    public AuthenticationManager authenticationManager(
-//            UserDetailsService userDetailsService,
-//            PasswordEncoder passwordEncoder
-//    ) {
-//        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+//    public UserDetailsService userDetailsService(UserRepository userRepository) {
+//        return new DomainUserDetailsService(userRepository);
 //    }
-
 }
