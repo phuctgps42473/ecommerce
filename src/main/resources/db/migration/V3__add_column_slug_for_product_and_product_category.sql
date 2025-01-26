@@ -1,0 +1,2 @@
+ALTER TABLE product_categories ADD COLUMN slug VARCHAR(255);
+ALTER TABLE products ADD COLUMN slug VARCHAR(255);

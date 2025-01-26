@@ -53,4 +53,7 @@ public class Product extends DomainObject {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Date updatedAt;
+
+    @Column(name = "slug")
+    private String slug;
 }
