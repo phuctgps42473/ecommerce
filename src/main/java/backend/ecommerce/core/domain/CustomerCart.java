@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@Table(name = "carts")
+@Table(name = "customer_carts")
 public class Cart {
     @EmbeddedId
     private CartId id;

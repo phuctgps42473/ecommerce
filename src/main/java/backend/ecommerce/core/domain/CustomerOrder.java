@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -21,9 +22,12 @@ public class Order extends DomainObject{
     @JoinColumn(name = "address_id")
     private Address address;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_id")
-    private Payment payment;
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "payment_id")
+//    private Payment payment;
+
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "order")
+    private List<OrderDetail> orderDetailList;
 
     @Column(name = "shipment_fee")
     private Double shipmentFee;
