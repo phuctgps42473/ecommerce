@@ -1,5 +1,6 @@
 package backend.ecommerce.core.security;
 
+import backend.ecommerce.core.domain.UserRole;
 import backend.ecommerce.core.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,7 +49,9 @@ public class SecurityConfiguration {
                             authorizeHttp.requestMatchers("/login/*").permitAll();
                             authorizeHttp.requestMatchers("/api/public/**").permitAll();
 
-                            authorizeHttp.requestMatchers("/api/admin/**").hasAuthority("admin");
+
+                            authorizeHttp.requestMatchers("/api/admin/authenticate").permitAll();
+                            authorizeHttp.requestMatchers("/api/admin/**").hasAuthority(UserRole.ADMIN.name());
 
                             authorizeHttp.anyRequest().authenticated();
                         }

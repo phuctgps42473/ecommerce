@@ -93,7 +93,7 @@ public class OauthController {
                 user = new User();
                 user.setEmail(email);
                 user.setEmailVerified(true);
-                user.setUsername(name);
+                user.setFullname(name);
                 user.setImageUrl(imageUrl);
 
                 this.userService.createUser(user);

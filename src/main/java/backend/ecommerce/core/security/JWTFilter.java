@@ -16,7 +16,6 @@ import java.io.IOException;
 
 public class JWTFilter extends GenericFilterBean {
 
-    public static final String JWT_NAME = "jwt";
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
     private final JWTProvider jwtUtils;

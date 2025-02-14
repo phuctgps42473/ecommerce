@@ -59,7 +59,6 @@ public class JWTProvider {
             return true;
         } catch (Exception ex) {
             return false;
-
         }
     }
 
@@ -93,7 +92,7 @@ public class JWTProvider {
     public Authentication getAuthentication(String token) {
         try {
             Claims claims = parseClaims(token, TokenType.ACCESS_TOKEN);
-            List<? extends GrantedAuthority> authorities = Arrays.stream(claims.get("auth").toString().split(",")).map(SimpleGrantedAuthority::new).toList();
+            List<? extends GrantedAuthority> authorities = Arrays.stream(claims.get("role").toString().split(",")).map(SimpleGrantedAuthority::new).toList();
 
             User principal = new User(claims.getSubject(), "", authorities);
 

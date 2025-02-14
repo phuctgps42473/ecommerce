@@ -1,37 +1,24 @@
 package backend.ecommerce.core.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.io.Serializable;
-
-@Data
 @Entity
 @Table(name = "customer_carts")
-public class Cart {
-    @EmbeddedId
-    private CartId id;
-
-    @MapsId("user_id")
+@Getter
+@Setter
+@NoArgsConstructor
+public class CustomerCart extends DomainObject {
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", insertable = false, updatable = false, nullable = false)
+    @JoinColumn(name = "customer_id", insertable = false, updatable = false, nullable = false)
     private User user;
 
-    @MapsId("product_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", insertable = false, updatable = false, nullable = false)
-    private Product product;
+    @JoinColumn(name = "product_variant_id", insertable = false, updatable = false, nullable = false)
+    private ProductVariant productVariant;
 
-    @Column(name = "product_quantity")
-    private Integer productQuantity;
-
-    @Embeddable
-    @Data
-    public static class CartId implements Serializable {
-        @Column(name = "user_id")
-        private Long user_id;
-
-        @Column(name = "product_id")
-        private Long product_id;
-    }
+    @Column(name = "quantity")
+    private Integer quantity;
 }

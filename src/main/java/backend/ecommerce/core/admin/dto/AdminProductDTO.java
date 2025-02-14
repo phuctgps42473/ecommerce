@@ -18,9 +18,6 @@ public record AdminProductDTO(
         @Size(max = 100)
         String productName,
 
-        @PositiveOrZero
-        Double price,
-
         @Positive
         Double costPrice,
 

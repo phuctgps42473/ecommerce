@@ -2,28 +2,30 @@ package backend.ecommerce.core.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 
-@Data
 @Entity
-@Table(name = "order_details")
-public class OrderDetail {
+@Table(name = "customer_order_details")
+@Setter @Getter
+@NoArgsConstructor
+public class CustomerOrderDetail {
     @EmbeddedId
     private OrderDetailId id;
 
-    @MapsId("order_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
-    private Order order;
+    @JoinColumn(name = "customer_order_id")
+    private CustomerOrder customerOrder;
 
-    @MapsId("product_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "product_variant_id")
+    private ProductVariant productVariant;
 
-    @Column(name = "product_quantity")
-    private Integer productQuantity;
+    @Column(name = "quantity")
+    private Integer quantity;
 
     @Column(name = "subtotal")
     private Double subtotal;

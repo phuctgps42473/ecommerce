@@ -1,59 +1,57 @@
 package backend.ecommerce.core.domain;
 
+import backend.ecommerce.core.admin.dto.NewProductRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
-@EqualsAndHashCode(callSuper = true)
-@Data
 @Table(name = "products")
 @Entity
+@Getter @Setter
+@NoArgsConstructor
 public class Product extends DomainObject {
     @JsonIgnore
-    public static String ENTITY_NAME = "product";
+    public String ENTITY_NAME = "product";
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = true)
+    @JoinColumn(name = "category_id")
     @OnDelete(action = OnDeleteAction.SET_NULL)
     private ProductCategory productCategory;
+
+    @JoinColumn(name = "product_brand")
+    private String productBrand;
 
     @Column(name = "product_name", nullable = false)
     private String productName;
 
-    @Column(name = "price", nullable = false)
-    private Double price;
+    @Column(name = "slug", unique = true)
+    private String slug;
 
-    @Column(name = "cost_price", nullable = false)
-    private Double costPrice;
-
-    @Column(name = "sku", nullable = false)
-    private String sku;
-
-    @Column(name = "stock_quantity")
-    private Integer stockQuantity;
+    @Column(name = "product_profile_image")
+    private String productProfileImage;
 
     @Column(name = "description")
     private String description;
 
-    @Column(name = "weight")
-    private Double weight;
-
     @CreationTimestamp
-    @Column(name = "added_date", nullable = false)
-    private Date addedDate;
+    @Column(name = "created_at")
+    private LocalDate created_at;
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    private Date updatedAt;
+    private LocalDate updatedAt;
 
-    @Column(name = "slug")
-    private String slug;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProductVariant> productVariantList = new ArrayList<>();
 }

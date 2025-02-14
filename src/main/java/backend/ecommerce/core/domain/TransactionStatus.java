@@ -1,3 +1,8 @@
 package backend.ecommerce.core.domain;
 
-public enum TransactionStatus { SUCCESSFUL, DECLINED, FAILED }
+public enum TransactionStatus {
+    PENDING,
+    SUCCESSFUL,
+    DECLINED,
+    FAILED
+}

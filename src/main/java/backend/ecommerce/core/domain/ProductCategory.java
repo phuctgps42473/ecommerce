@@ -8,19 +8,19 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
-@Getter
-@Setter
 @Entity
 @Table(name = "product_categories")
+@Getter
+@Setter
+@NoArgsConstructor
 public class ProductCategory extends DomainObject {
     @JsonIgnore
-    public static String ENTITY_NAME = "product category";
+    public String ENTITY_NAME = "product category";
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false)
-    private String name;
+    private ProductCategoryType name;
 
     @Column(name = "slug")
     private String slug;
@@ -31,7 +31,7 @@ public class ProductCategory extends DomainObject {
     @OneToMany(mappedBy = "productCategory", fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<>();
 
-    public ProductCategory(String name, String description) {
+    public ProductCategory(ProductCategoryType name, String description) {
         this.setName(name);
         this.setDescription(description);
     }

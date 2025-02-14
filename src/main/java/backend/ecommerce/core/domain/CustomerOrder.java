@@ -1,40 +1,36 @@
 package backend.ecommerce.core.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
 @Entity
-@Table(name = "orders")
-public class Order extends DomainObject{
+@Table(name = "customer_orders")
+@Getter
+@Setter
+@NoArgsConstructor
+public class CustomerOrder extends DomainObject {
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "customer_id")
     private User user;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
     private Address address;
 
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "payment_id")
-//    private Payment payment;
-
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "order")
-    private List<OrderDetail> orderDetailList;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customerOrder")
+    private List<CustomerOrderDetail> customerOrderDetailList;
 
     @Column(name = "shipment_fee")
     private Double shipmentFee;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status")
-    private OrderStatus orderStatus;
+    private CustomerOrderStatus customerOrderStatus;
 
     @Column(name = "total_price")
     private Double totalPrice;

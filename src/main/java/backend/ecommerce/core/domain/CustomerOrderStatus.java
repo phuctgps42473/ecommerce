@@ -1,3 +1,3 @@
 package backend.ecommerce.core.domain;
 
-public enum OrderStatus {PREPARING, SHIPPING, COMPLETE, DECLINED, RETURNING, RETURNED}
+public enum CustomerOrderStatus {PREPARING, SHIPPING, COMPLETE, DECLINED, RETURNING, RETURNED}

@@ -17,8 +17,10 @@ import java.util.Date;
 @Table(name = "users")
 @Data
 public class User extends DomainObject{
-    @Column(name = "username")
-    private String username;
+    public static final String ENTITY_NAME = "user";
+
+    @Column(name = "fullname")
+    private String fullname;
 
     @NotNull
     @Email
@@ -42,7 +44,7 @@ public class User extends DomainObject{
     @Column(name = "reset_token")
     private String resetToken;
 
-    @Column(name = "resetTokenExpirationDate")
+    @Column(name = "reset_token_expiration_date")
     private Date resetDate;
 
     @Size(max = 10, min = 10)
@@ -54,7 +56,7 @@ public class User extends DomainObject{
 
     @Column(name = "user_role")
     @Enumerated(EnumType.STRING)
-    private UserRole userRole = UserRole.customer;
+    private UserRole userRole = UserRole.CUSTOMER;
 
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted = false;

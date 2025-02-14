@@ -1,3 +1,3 @@
 package backend.ecommerce.core.domain;
 
-public enum UserRole {admin, customer}
+public enum UserRole {ADMIN, CUSTOMER}

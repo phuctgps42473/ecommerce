@@ -1,6 +1,6 @@
 package backend.ecommerce.core.repository;
 
-import backend.ecommerce.core.User;
+import backend.ecommerce.core.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
