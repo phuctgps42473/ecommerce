@@ -1,96 +1,80 @@
-package backend.ecommerce.core.repository;
+package backend.ecommerce.core.product;
 
 import backend.ecommerce.core.domain.Product;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    @Query(value = """
-            select distinct p
-            from Product p
+    @Query("""
+            select p from Product p
+            join p.productCategory pc
+            join p.productVariantList pv
             left join fetch p.promotionProductList pp
-            left join fetch Promotion pm
-            on
-             pp.promotion.id = pm.id 
-             and pm.isValid = true
-             and CURRENT_TIMESTAMP between pm.startDate and pm.endDate
-            where p.slug = :slug
+            left join fetch pp.promotion pm
+            where pc.slug = :slug
             """)
-    Product findBySlug(@Param("slug") String slug);
+    Page<Product> findAllByCategorySlug(@Param("slug") String slug, Pageable pageable);
 
     @Query("""
-            select  p
-            from Product p
+            select p from Product p
+            join p.productVariantList pv
             left join fetch p.promotionProductList pp
-            left join fetch Promotion pm
-            on
-             pp.promotion.id = pm.id 
-             and pm.isValid = true
-             and CURRENT_TIMESTAMP between pm.startDate and pm.endDate
-            where 
-                p.stockQuantity >
-                    case 
-                        when p.productCategory.slug = 'switches' then 20000
-                        ELSE 500
-                    end
-                and
-                p.addedDate >= :days
+            left join fetch pp.promotion pm
+            where
+                p.productBrand = upper(:brand) and
+                p.id != :productId
             """)
-    List<Product> findHighStockProductsInTheLast(@Param("days") Date days, Pageable pageable);
-
+    Page<Product> findAllByBrandExceptProductId(String brand, Long productId, Pageable pageable);
 
     @Query("""
-           select p
-           from Product p
-           left join fetch p.promotionProductList pp
-           left join fetch Promotion pm
-           on
-               pp.promotion.id = pm.id 
-               and pm.isValid = true
-               and CURRENT_TIMESTAMP between pm.startDate and pm.endDate
-           join p.orderDetailList od
-           on 
-               od.product.id = p.id and
-               od.order.orderStatus = 'COMPLETE'
-           group by p.id, pp.product.id, pp.promotion.id
-           order by count(p.id) desc
+            select p from Product p
+            join p.productVariantList pv
+            join fetch p.promotionProductList pp
+            join fetch pp.promotion pm
             """)
-    List<Product> findProductsAppearMostInOrders(Pageable pageable);
+    Page<Product> findAllWithPromotions(Pageable pageable);
 
     @Query("""
-            select distinct p
-            from Product p
-            join fetch PromotionProduct pp
-            on p.id = pp.product.id
-            join fetch Promotion pm
-            on 
-                pp.promotion.id = pm.id and
-                pm.isValid = true and
-                current_date between pm.startDate and pm.endDate
+            select p from Product  p
+            join p.productVariantList pv
+            left join fetch p.promotionProductList pp
+            left join fetch pp.promotion pm
+            where pv.id in (
+                    select pv.id from ProductVariant pv
+                    join CustomerOrderDetail co
+                    on co.productVariant.id = pv.id
+                    group by pv
+                    order by sum(co.quantity)
+            )
             """)
-    List<Product> findOnSaleProducts(Pageable pageable);
+    Page<Product> findAllByMostOrdered(@Param("date") LocalDateTime date, Pageable pageable);
 
     @Query("""
-            select p
-            from Product p
-            left join fetch PromotionProduct pp
-            on p.id = pp.product.id
-            left join fetch Promotion pm
-            on 
-                pp.promotion.id = pm.id 
-                and pm.isValid = true
-                and CURRENT_TIMESTAMP between pm.startDate and pm.endDate
-            where p.productCategory.slug = :slug
+            select p from Product  p
+            join p.productVariantList pv
+            left join fetch p.promotionProductList pp
+            left join fetch pp.promotion pm
+            where p.createdAt > :date
             """)
-    List<Product> findAllByProductCategorySlug(@Param("slug") String slug, Pageable pageable);
+    Page<Product> findAllAddedAfter(@Param("date") LocalDate date, Pageable pageable);
 
-
+    @Query("""
+            select p from Product p
+            join p.productVariantList pv
+            left join fetch p.promotionProductList pp
+            left join fetch pp.promotion pm
+            where p.slug = :productSlug
+            group by p, pm, pp
+            """)
+    Optional<Product> findBySlug(@Param("productSlug") String productSlug);
 
 }

@@ -1,5 +1,7 @@
-package backend.ecommerce.core.domain;
+package backend.ecommerce.vendor;
 
+import backend.ecommerce.core.domain.DomainObject;
+import backend.ecommerce.core.domain.Product;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +29,7 @@ public class VendorProduct extends DomainObject {
     @Column(name = "brand")
     private String brand;
 
-    @Column(name = "product_gtin")
+    @Column(name = "gtin")
     private String gtin;
 
     @OneToMany(mappedBy = "vendorProduct", fetch = FetchType.LAZY)

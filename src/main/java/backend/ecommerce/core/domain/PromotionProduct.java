@@ -1,18 +1,19 @@
 package backend.ecommerce.core.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
 
 
 @Entity
-@Getter
-@Setter
 @Table(name = "promotion_products")
+@Setter
+@Getter
+@NoArgsConstructor
 public class PromotionProduct {
     @EmbeddedId
     private PromotionProductId Id;

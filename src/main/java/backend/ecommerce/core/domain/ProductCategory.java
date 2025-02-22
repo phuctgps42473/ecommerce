@@ -1,6 +1,5 @@
 package backend.ecommerce.core.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -14,15 +13,12 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class ProductCategory extends DomainObject {
-    @JsonIgnore
-    public String ENTITY_NAME = "product category";
-
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false)
     private ProductCategoryType name;
 
-    @Column(name = "slug")
+    @Column(name = "slug", unique = true)
     private String slug;
 
     @Column(name = "description")
@@ -30,9 +26,4 @@ public class ProductCategory extends DomainObject {
 
     @OneToMany(mappedBy = "productCategory", fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<>();
-
-    public ProductCategory(ProductCategoryType name, String description) {
-        this.setName(name);
-        this.setDescription(description);
-    }
 }

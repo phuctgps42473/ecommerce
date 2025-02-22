@@ -3,15 +3,18 @@ package backend.ecommerce.core.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-@Setter
-@Getter
 @Entity
 @Table(name = "product_variant_medias")
+@Setter
+@Getter
+@NoArgsConstructor
+
 public class ProductVariantMedia extends DomainObject {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

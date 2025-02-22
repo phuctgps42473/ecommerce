@@ -1,6 +1,5 @@
-package backend.ecommerce.erp;
+package backend.ecommerce.vendor;
 
-import backend.ecommerce.core.domain.Vendor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package backend.ecommerce.core.domain;
+package backend.ecommerce.vendor;
 
 public class VendorCatalogStaging {
     private Vendor vendor;

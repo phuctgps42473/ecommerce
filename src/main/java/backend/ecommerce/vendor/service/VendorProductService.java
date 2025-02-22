@@ -1,6 +1,5 @@
-package backend.ecommerce.erp;
+package backend.ecommerce.vendor;
 
-import backend.ecommerce.core.domain.VendorProduct;
 import backend.ecommerce.core.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

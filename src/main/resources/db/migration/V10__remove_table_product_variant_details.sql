@@ -1,0 +1,5 @@
+ALTER TABLE product_variant_details
+DROP
+CONSTRAINT fk_product_variant_details_on_product_variant;
+
+DROP TABLE product_variant_details CASCADE;

@@ -17,11 +17,11 @@ public class CustomerOrderDetail {
     private OrderDetailId id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_order_id")
+    @JoinColumn(name = "customer_order_id", insertable = false, updatable = false)
     private CustomerOrder customerOrder;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_variant_id")
+    @JoinColumn(name = "product_variant_id", insertable = false, updatable = false)
     private ProductVariant productVariant;
 
     @Column(name = "quantity")
@@ -33,10 +33,10 @@ public class CustomerOrderDetail {
     @Data
     @Embeddable
     public static class OrderDetailId implements Serializable {
-        @Column(name = "order_id")
-        private Long order_id;
+        @Column(name = "customer_order_id")
+        private Long customerOrderId;
 
-        @Column(name = "product_id")
-        private Long product_id;
+        @Column(name = "product_variant_id")
+        private Long productVariantId;
     }
 }

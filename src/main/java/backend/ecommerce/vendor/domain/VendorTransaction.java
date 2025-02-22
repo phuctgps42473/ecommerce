@@ -1,5 +1,7 @@
-package backend.ecommerce.core.domain;
+package backend.ecommerce.vendor;
 
+import backend.ecommerce.core.domain.DomainObject;
+import backend.ecommerce.core.domain.PurchaseOrder;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

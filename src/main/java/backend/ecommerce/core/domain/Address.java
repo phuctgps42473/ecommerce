@@ -1,13 +1,13 @@
 package backend.ecommerce.core.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
 @Entity
 @Table(name = "user_addresses")
+@Setter
+@Getter
+@NoArgsConstructor
 public class Address extends DomainObject {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

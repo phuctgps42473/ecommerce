@@ -1,18 +1,17 @@
 package backend.ecommerce.core.domain;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
 @Entity
 @Table(name = "inventory_transactions")
+@Setter
+@Getter
+@NoArgsConstructor
 public class InventoryTransaction extends DomainObject{
     @Enumerated(value = EnumType.STRING)
     @Column(name = "transaction_type")

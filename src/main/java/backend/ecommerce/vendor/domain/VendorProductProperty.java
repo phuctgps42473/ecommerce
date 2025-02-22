@@ -1,10 +1,11 @@
-package backend.ecommerce.core.domain;
+package backend.ecommerce.vendor;
 
+import backend.ecommerce.core.domain.DomainObject;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "vendor_product_properties")
-public class VendorProductProperty extends DomainObject{
+public class VendorProductProperty extends DomainObject {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vendor_product_id")
     private VendorProduct vendorProduct;

@@ -4,21 +4,19 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
 
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "users")
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
 public class User extends DomainObject{
-    public static final String ENTITY_NAME = "user";
-
     @Column(name = "fullname")
     private String fullname;
 
@@ -73,6 +71,4 @@ public class User extends DomainObject{
         this.setEmail(email);
         this.setPassword(passwordHash);
     }
-
-    public User() {}
 }

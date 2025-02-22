@@ -10,7 +10,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/erp")
+@RequestMapping("/api/erp")
 public class VendorController {
     VendorService vendorService;
 

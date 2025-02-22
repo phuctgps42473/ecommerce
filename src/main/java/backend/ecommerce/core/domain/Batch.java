@@ -1,12 +1,20 @@
 package backend.ecommerce.core.domain;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 
 @Entity
 @Table(name = "batches")
+@Setter
+@Getter
+@NoArgsConstructor
 public class Batch extends DomainObject {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
@@ -35,6 +43,7 @@ public class Batch extends DomainObject {
     @Column(name = "warehouse")
     private String warehouse;
 
+    @CreationTimestamp
     @Column(name = "batch_date")
     private LocalDateTime batchDate;
 }

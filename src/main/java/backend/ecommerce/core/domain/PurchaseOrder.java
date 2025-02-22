@@ -1,7 +1,9 @@
 package backend.ecommerce.core.domain;
 
+import backend.ecommerce.vendor.domain.Vendor;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -9,8 +11,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "purchase_orders")
-@Getter
 @Setter
+@Getter
+@NoArgsConstructor
 public class PurchaseOrder extends DomainObject {
     @ManyToOne
     @JoinColumn(name = "vendor_id")

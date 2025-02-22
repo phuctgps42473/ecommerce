@@ -1,5 +1,6 @@
-package backend.ecommerce.core.domain;
+package backend.ecommerce.vendor;
 
+import backend.ecommerce.core.domain.DomainObject;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-public class VendorPriceHistory extends DomainObject{
+public class VendorPriceHistory extends DomainObject {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vendor_product_id")
     private VendorProduct vendorProduct;

@@ -2,16 +2,18 @@ package backend.ecommerce.core.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
-@Setter
-@Getter
 @Entity
 @Table(name = "payment_transactions")
+@Setter
+@Getter
+@NoArgsConstructor
 public class PaymentTransaction extends DomainObject {
     @Column(name = "payment_gateway_transaction_id", unique = true)
     private String paymentGatewayTransactionId;
@@ -26,7 +28,7 @@ public class PaymentTransaction extends DomainObject {
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "status")
-    private TransactionStatus status;
+    private PaymentTransactionStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")

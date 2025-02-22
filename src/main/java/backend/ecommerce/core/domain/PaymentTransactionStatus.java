@@ -1,6 +1,6 @@
 package backend.ecommerce.core.domain;
 
-public enum TransactionStatus {
+public enum PaymentTransactionStatus {
     PENDING,
     SUCCESSFUL,
     DECLINED,

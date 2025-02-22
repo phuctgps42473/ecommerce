@@ -1,27 +1,27 @@
 package backend.ecommerce.core.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Table(name = "promotions")
 @Getter
 @Setter
-@Table(name = "promotions")
+@NoArgsConstructor
 public class Promotion extends DomainObject {
     @Column(name = "name", length = 255)
     private String name;
 
     @Column(name = "start_date")
-    private ZonedDateTime startDate;
+    private LocalDateTime startDate;
 
     @Column(name = "end_date")
-    private ZonedDateTime endDate;
+    private LocalDateTime endDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "promotion_type", length = 20)
