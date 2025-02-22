@@ -13,12 +13,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CustomerCart extends DomainObject {
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", insertable = false, updatable = false, nullable = false)
+    @JoinColumn(name = "customer_id")
     @JsonIgnore
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_variant_id", insertable = false, updatable = false, nullable = false)
+    @JoinColumn(name = "product_variant_id")
     private ProductVariant productVariant;
 
     @Column(name = "quantity")
