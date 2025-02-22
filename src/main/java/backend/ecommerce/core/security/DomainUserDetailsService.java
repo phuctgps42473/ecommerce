@@ -24,9 +24,7 @@ public class DomainUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        System.out.println("Hi");
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Email does not exist."));
-        System.out.println("HO");
 
         if (user.getIsDeleted()) {
             throw new UsernameNotFoundException("Email does not exist.");
