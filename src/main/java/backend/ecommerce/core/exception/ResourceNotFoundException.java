@@ -7,14 +7,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ResourceNotFoundException extends RuntimeException {
     private static final String DEFAULT_MESSAGE = "Cannot found the requested resources";
 
-    public ResourceNotFoundException(String message) {
-    }
+    public ResourceNotFoundException(String message) {}
 
     public ResourceNotFoundException() {
         super(DEFAULT_MESSAGE);
     }
 
-    public ResourceNotFoundException(String entityName, long id) {
-        super("Cannot find resource " + entityName + " with id " + id);
+    public ResourceNotFoundException(String entityName, String identifier) {
+        super("Cannot find resource " + entityName + " with identifier " + identifier);
     }
 }
