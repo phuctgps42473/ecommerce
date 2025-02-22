@@ -1,18 +1,40 @@
-package backend.ecommerce.vendor;
+package backend.ecommerce.vendor.domain;
 
 import backend.ecommerce.core.domain.DomainObject;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "vendor_product_properties")
-public class VendorProductProperty extends DomainObject {
+@Setter
+@Getter
+@NoArgsConstructor
+public class VendorProductProperty {
+    @EmbeddedId
+    private VendorProductPropertyId vendorProductPropertyId;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vendor_product_id")
+    @JoinColumn(name = "vendor_product_id", insertable = false, updatable = false)
+    @JsonIgnore
     private VendorProduct vendorProduct;
 
-    @Column(name = "property_name")
-    private String propertyName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_property_id", insertable = false, updatable = false)
+    @JsonIgnore
+    private ProductProperty productProperty;
 
-    @Column(name = "property_value")
-    private String propertyValue;
+    @Embeddable
+    @Setter
+    @Getter
+    public class VendorProductPropertyId {
+        @Column(name = "vendor_product_id")
+        private Long vendorProductId;
+
+        @Column(name = "product_property_id")
+        private Long productPropertyId;
+    }
 }

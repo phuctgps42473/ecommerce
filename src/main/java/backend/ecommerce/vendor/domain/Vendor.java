@@ -1,4 +1,4 @@
-package backend.ecommerce.vendor;
+package backend.ecommerce.vendor.domain;
 
 import backend.ecommerce.core.domain.DomainObject;
 import jakarta.persistence.Column;

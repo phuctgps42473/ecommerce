@@ -1,6 +1,8 @@
-package backend.ecommerce.vendor;
+package backend.ecommerce.vendor.service;
 
 import backend.ecommerce.core.exception.ResourceNotFoundException;
+import backend.ecommerce.vendor.domain.Vendor;
+import backend.ecommerce.vendor.repository.VendorRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

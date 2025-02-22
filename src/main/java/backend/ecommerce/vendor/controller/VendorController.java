@@ -1,6 +1,9 @@
-package backend.ecommerce.erp;
+package backend.ecommerce.vendor.controller;
 
-import backend.ecommerce.core.domain.Vendor;
+import backend.ecommerce.vendor.domain.Vendor;
+import backend.ecommerce.vendor.domain.VendorProduct;
+import backend.ecommerce.vendor.service.VendorProductService;
+import backend.ecommerce.vendor.service.VendorService;
 import jakarta.annotation.Nullable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,11 +13,13 @@ import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/erp")
+@RequestMapping("/api/admin")
 public class VendorController {
-    VendorService vendorService;
+    private final VendorService vendorService;
+    private final VendorProductService vendorProductService;
 
-    public VendorController(VendorService vendorService) {
+    public VendorController(VendorService vendorService, VendorProductService vendorProductService) {
+        this.vendorProductService = vendorProductService;
         this.vendorService = vendorService;
     }
 
