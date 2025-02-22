@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PromotionRepository extends JpaRepository<Promotion, Long> {
-//
+
 //    @Query("""
 //            select pm from Promotion pm
 //            left join PromotionProduct pp
@@ -20,4 +20,11 @@ public interface PromotionRepository extends JpaRepository<Promotion, Long> {
 //            and p.slug = :slug
 //            """)
 //    Promotion findValidByProductSlug(@Param("slug") String slug);
+//
+//    @Query("""
+//            select pm from Promotion pm
+//            join pm.promotionProductList pp
+//            where pp.product.id = :id
+//            """)
+//    Promotion findBestForProductId(@Param("id") Long id );
 }

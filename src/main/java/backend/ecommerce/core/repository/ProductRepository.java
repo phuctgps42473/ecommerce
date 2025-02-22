@@ -1,4 +1,4 @@
-package backend.ecommerce.core.product;
+package backend.ecommerce.core.repository;
 
 import backend.ecommerce.core.domain.Product;
 import org.springframework.data.domain.Page;
@@ -41,7 +41,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             join fetch p.promotionProductList pp
             join fetch pp.promotion pm
             """)
-    Page<Product> findAllWithPromotions(Pageable pageable);
+    Page<Product> findAllHavePromotions(Pageable pageable);
 
     @Query("""
             select p from Product  p

@@ -1,4 +1,4 @@
-package backend.ecommerce.core.product;
+package backend.ecommerce.core.repository;
 
 import backend.ecommerce.core.domain.ProductCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
