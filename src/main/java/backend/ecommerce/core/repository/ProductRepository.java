@@ -1,8 +1,10 @@
 package backend.ecommerce.core.repository;
 
+import backend.ecommerce.core.admin.product.PreviewProductResponse;
 import backend.ecommerce.core.domain.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -67,14 +69,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             """)
     Page<Product> findAllAddedAfter(@Param("date") LocalDate date, Pageable pageable);
 
-    @Query("""
-            select p from Product p
-            join p.productVariantList pv
-            left join fetch p.promotionProductList pp
-            left join fetch pp.promotion pm
-            where p.slug = :productSlug
-            group by p, pm, pp
-            """)
+    @EntityGraph(type = EntityGraph.EntityGraphType.LOAD, attributePaths = {"productVariantList", "productPropertyList", "productPropertyList.property", "promotionProductList", "promotionProductList.promotion"})
     Optional<Product> findBySlug(@Param("productSlug") String productSlug);
 
+    @Query("""
+            select new backend.ecommerce.core.admin.product.PreviewProductResponse(p.id, pc.name,p.productName,p.totalStock) from Product  p
+            join p.productCategory pc
+            """)
+    Page<PreviewProductResponse> findAllAdminPreviewProduct(Pageable pageable);
 }

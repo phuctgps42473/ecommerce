@@ -6,8 +6,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Set;
+
 @Repository
 public interface PromotionRepository extends JpaRepository<Promotion, Long> {
+
+    @Query("""
+            select p from Promotion p
+            join p.promotionProductList pp
+            where pp.product.id = :productId
+            """)
+    Set<Promotion> findAllByProductId(@Param("productId") Long productId);
 
 //    @Query("""
 //            select pm from Promotion pm

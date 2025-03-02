@@ -2,6 +2,7 @@ package backend.ecommerce.core.service;
 
 import backend.ecommerce.core.domain.User;
 import backend.ecommerce.core.dto.RegisterFormDTO;
+import backend.ecommerce.core.dto.UserInfoDTO;
 import backend.ecommerce.core.exception.ResourceNotFoundException;
 import backend.ecommerce.core.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,10 @@ public class UserService {
 
     public User getUserByEmail(String email) {
         return this.userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("No user found for email: "+ email));
+    }
+
+    public UserInfoDTO getUserInfoDTOByEmail(String email) {
+        return this.userRepository.findUserInfoDTOByEmail(email).orElseThrow(() -> new ResourceNotFoundException("No user found for email: " + email));
     }
 
     public void registerUser(RegisterFormDTO registerForm) {

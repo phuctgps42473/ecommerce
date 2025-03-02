@@ -1,26 +1,29 @@
 package backend.ecommerce.core.service;
 
-import backend.ecommerce.core.domain.Product;
-import backend.ecommerce.core.domain.ProductVariant;
-import backend.ecommerce.core.domain.Promotion;
-import backend.ecommerce.core.domain.PromotionProduct;
+import backend.ecommerce.core.domain.*;
 import backend.ecommerce.core.exception.ResourceNotFoundException;
 import backend.ecommerce.core.repository.ProductRepository;
+import backend.ecommerce.core.repository.PromotionRepository;
 import backend.ecommerce.sale.PreviewProductDTO;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;
+import java.util.List;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
+    private final PromotionRepository promotionRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, PromotionRepository promotionRepository) {
         this.productRepository = productRepository;
+        this.promotionRepository = promotionRepository;
     }
 
     /// return the on sale with largest promotion
