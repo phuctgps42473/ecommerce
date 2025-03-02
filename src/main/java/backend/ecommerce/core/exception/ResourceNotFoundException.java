@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ResourceNotFoundException extends RuntimeException {
     private static final String DEFAULT_MESSAGE = "Cannot found the requested resources";
 
-    public ResourceNotFoundException(String message) {}
+    public ResourceNotFoundException(String message) { super(message); }
 
     public ResourceNotFoundException() {
         super(DEFAULT_MESSAGE);
