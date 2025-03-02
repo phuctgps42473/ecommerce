@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +32,7 @@ public class PublicProductDetailController {
     public ResponseEntity<Page<PreviewProductDTO>> getProductsFromTheSameBrand(
             @NotNull @RequestParam("brand") String brand,
             @NotNull @RequestParam("id") Long id,
-            @PageableDefault(page = 0, size = 10) Pageable pageable
+            Pageable pageable
     ) {
         log.info("Finding Products the same brand with product id: {}", id);
         return ResponseEntity.ok(this.productService.getProductsFromTheSameBrandAsProductId(brand, id, pageable));
