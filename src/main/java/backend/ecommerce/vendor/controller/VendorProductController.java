@@ -31,17 +31,6 @@ public class VendorProductController {
         return ResponseEntity.ok(vendorProductService.getProductsByVendorId(vendorId, pageable));
     }
 
-    @PostMapping("/{vendorId}/products")
-    public ResponseEntity<Void> addNewProduct(@RequestBody VendorProduct newVendorProduct, @PathVariable Long vendorId) {
-        log.info("Received a request for adding new vendor product: {}", newVendorProduct.getVendorProductPropertyList().size());
-
-        Vendor vendor = vendorService.getVendorDetail(vendorId);
-        newVendorProduct.setVendor(vendor);
-
-        this.vendorProductService.addNewVendorProduct(newVendorProduct);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
     @GetMapping("/{vendorId}/products/{productId}")
     public ResponseEntity<VendorProduct> getProducts(@PathVariable("vendorId") Long vendorId, @PathVariable("productId") Long productId) {
         return ResponseEntity.ok(vendorProductService.getProductByIdAndVendorId(productId, vendorId));

@@ -9,8 +9,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "product_variants")
@@ -18,7 +16,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class ProductVariant extends DomainObject {
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     @JsonIgnore
@@ -49,4 +46,14 @@ public class ProductVariant extends DomainObject {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDate updatedAt;
+
+    public ProductVariant(Product product, String name, String sku, String gtin, String image, Double price, Double stock) {
+        this.product = product;
+        this.name = name;
+        this.sku = sku;
+        this.gtin = gtin;
+        this.image = image;
+        this.price = price;
+        this.stock = stock;
+    }
 }

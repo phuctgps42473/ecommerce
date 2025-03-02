@@ -1,12 +1,13 @@
 package backend.ecommerce.core.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "promotions")
@@ -14,7 +15,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class Promotion extends DomainObject {
-    @Column(name = "name", length = 255)
+    @Column(name = "name")
     private String name;
 
     @Column(name = "start_date")
@@ -31,10 +32,12 @@ public class Promotion extends DomainObject {
     private double promotionValue;
 
     @Column(name = "is_valid")
+    @JsonIgnore
     private boolean isValid = false;
 
     @OneToMany(mappedBy = "promotion", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<PromotionProduct> promotionProductList;
+    @JsonIgnore
+    private Set<PromotionProduct> promotionProductList;
 
     public enum PromotionType {
         MONEY,

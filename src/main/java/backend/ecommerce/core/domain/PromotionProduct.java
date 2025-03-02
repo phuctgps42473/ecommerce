@@ -16,9 +16,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class PromotionProduct {
     @EmbeddedId
+    @JsonIgnore
     private PromotionProductId Id;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "promotion_id", insertable = false, updatable = false)
     private Promotion promotion;

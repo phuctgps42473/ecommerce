@@ -9,14 +9,18 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
+import java.util.UUID;
 
 
 @Table(name = "products")
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Product extends DomainObject {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
@@ -52,15 +56,38 @@ public class Product extends DomainObject {
 
     @CreationTimestamp
     @Column(name = "created_at")
+    @JsonIgnore
     private LocalDate createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at")
+    @JsonIgnore
     private LocalDate updatedAt;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<PromotionProduct> promotionProductList = new ArrayList<>();
+    private Set<PromotionProduct> promotionProductList = new HashSet<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ProductVariant> productVariantList = new ArrayList<>();
+    private Set<ProductProperty> productPropertyList = new HashSet<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<ProductVariant> productVariantList = new HashSet<>();
+
+    public Product(ProductCategory productCategory, String productBrand, Double totalStock, String productName, String dimensionsMM, Double weight, String slug, String productProfileImage, String description) {
+        this.productCategory = productCategory;
+        this.productBrand = productBrand;
+        this.totalStock = totalStock;
+        this.productName = productName;
+        this.dimensionsMM = dimensionsMM;
+        this.weight = weight;
+        this.slug = makeSlug(productName);
+        this.productProfileImage = productProfileImage;
+        this.description = description;
+    }
+
+    private static String makeSlug(String productName) {
+        String id = UUID.randomUUID().toString();
+        String name = productName.toLowerCase().replaceAll(" ", "-");
+        return name + id;
+    }
 }

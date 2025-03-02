@@ -8,7 +8,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.Set;
 
 
 @Entity
@@ -37,13 +38,13 @@ public class User extends DomainObject{
     private String activationToken;
 
     @Column(name = "activation_token_expiration_date")
-    private Date activationTokenExpirationDate;
+    private LocalDate activationTokenExpirationDate;
 
     @Column(name = "reset_token")
     private String resetToken;
 
     @Column(name = "reset_token_expiration_date")
-    private Date resetDate;
+    private LocalDate resetDate;
 
     @Size(max = 10, min = 10)
     @Column(name = "phone_number")
@@ -60,12 +61,16 @@ public class User extends DomainObject{
     private Boolean isDeleted = false;
 
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
-    private Date createdAt;
+    @Column(name = "created_at")
+    private LocalDate createdAt;
 
     @UpdateTimestamp
-    @Column(name = "last_update", nullable = false)
-    private Date lastUpdate;
+    @Column(name = "last_update")
+    private LocalDate lastUpdate;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY,orphanRemoval = true)
+    private Set<Address> addressList;
+
 
     public User(String email, String passwordHash) {
         this.setEmail(email);

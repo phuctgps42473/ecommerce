@@ -32,7 +32,4 @@ public class VendorProduct extends DomainObject {
 
     @Column(name = "gtin")
     private String gtin;
-
-    @OneToMany(mappedBy = "vendorProduct", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<VendorProductProperty> vendorProductPropertyList;
 }

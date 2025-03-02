@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "product_categories")
@@ -14,9 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 public class ProductCategory extends DomainObject {
     @NotNull
-    @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false)
-    private ProductCategoryType name;
+    private String name;
 
     @Column(name = "slug", unique = true)
     private String slug;
@@ -25,5 +24,5 @@ public class ProductCategory extends DomainObject {
     private String description;
 
     @OneToMany(mappedBy = "productCategory", fetch = FetchType.LAZY)
-    private List<Product> products = new ArrayList<>();
+    private Set<Product> products = new HashSet<>();
 }

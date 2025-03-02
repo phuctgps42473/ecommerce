@@ -1,5 +1,6 @@
 package backend.ecommerce.core.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,10 +12,14 @@ import lombok.*;
 public class Address extends DomainObject {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @Column(name = "province")
     private String province;
+
+    @Column(name = "city")
+    private String city;
 
     @Column(name = "district")
     private String district;

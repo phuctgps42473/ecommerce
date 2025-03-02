@@ -1,0 +1,3 @@
+ALTER TABLE customer_orders
+DROP
+CONSTRAINT uc_customer_orders_address;
