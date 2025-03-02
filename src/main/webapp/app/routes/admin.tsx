@@ -4,7 +4,9 @@ import Sidebar from "~/components/admin/Sidebar";
 export default function AdminLayout() {
   return <div className="flex">
     <Sidebar />
-    <Outlet />
+    <div className="h-screen overflow-y-scroll">
+      <Outlet />
+    </div>
   </div>
 
 }

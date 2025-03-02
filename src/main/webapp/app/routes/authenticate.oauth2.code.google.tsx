@@ -24,7 +24,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         ["Set-Cookie", await sessionAPI.commitSession(session)],
         ["Set-Cookie", await cookieAPI.serialize(refreshToken, { maxAge: refreshTokenExpiresInSecond })]
       ]
-    })
+    });
 
   } catch (error) {
     return redirect("/login");

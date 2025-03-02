@@ -1,24 +1,28 @@
+/* eslint-disable no-case-declarations */
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, Link, redirect, useLoaderData } from "@remix-run/react";
-import { sessionAPI } from "~/utils/token.server";
+import { TokensResponse } from "~/authentication/types";
+import apiFetcher from "~/utils/fetcher.server";
+import { cookieAPI, sessionAPI } from "~/utils/token.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await sessionAPI.getSession(request.headers.get("Cookie"));
 
   const redirectPath = session.get("redirect_path");
 
-  return Response.json({ redirectPath },{
+  return Response.json({ redirectPath }, {
     headers: {
       "Set-Cookie": await sessionAPI.commitSession(session)
     }
   });
 }
 
-export async function action({ request }: ActionFunctionArgs) {
-  const formData = await request.formData();
+enum LoginType {
+  UsernamePassword = 'usernamePassword',
+  Google = 'google',
+}
 
-  const redirectPath = formData.get("redirect-path") || "";
-
+function generateGoogleLoginUrl(redirectPath: string) {
   const clientId = '252315358035-0hti40fuvvfi7u7bc9tgb4e9ljpmkbfo.apps.googleusercontent.com';
   const redirectUri = 'http://localhost:5173/authenticate/oauth2/code/google';
   const responseType = 'code';
@@ -26,10 +30,54 @@ export async function action({ request }: ActionFunctionArgs) {
   const includeGrantedScopes = 'true';
   const state = redirectPath;
 
-  const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}&state=${state}&include_granted_scopes=${includeGrantedScopes}`;
+  return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}&state=${state}&include_granted_scopes=${includeGrantedScopes}`;
+}
+
+export async function action({ request }: ActionFunctionArgs) {
+  const formData = await request.formData();
+  const loginType = formData.get("login-type");
 
 
-  return redirect(url);
+  const redirectPath = formData.get("redirect-path")?.toString() || "/";
+
+  switch (loginType) {
+    case LoginType.Google:
+      return redirect(generateGoogleLoginUrl(redirectPath));
+
+    default:
+      const email = formData.get("email")!.valueOf();
+      const password = formData.get("password")!.valueOf();
+      try {
+        const res = await apiFetcher("/authenticate", { method: "POST", data: { email, password } });
+        const { accessToken, refreshToken, refreshTokenExpiresInSecond }: TokensResponse = res.data;
+        const session = await sessionAPI.getSession(request.headers.get("Cookie"));
+        session.set("access_token", accessToken);
+        const userResponse = apiFetcher("/users/me", {
+          headers: {
+            "Authorization": "Bearer " + accessToken
+          }
+        });
+
+        // TODO: HANDLE ERROR
+        const userInfo = (await userResponse).data.data;
+        session.set("user_info", userInfo);
+
+
+        await sessionAPI.commitSession(session);
+        await cookieAPI.serialize(refreshToken, { maxAge: refreshTokenExpiresInSecond });
+
+        return redirect(redirectPath, {
+            headers: [
+              ["Set-Cookie", await sessionAPI.commitSession(session)],
+              ["Set-Cookie", await cookieAPI.serialize(refreshToken, { maxAge: refreshTokenExpiresInSecond })]
+            ]
+          }
+        );
+      } catch (error) {
+        console.log("Handle this");
+      }
+  }
+
 }
 
 
@@ -47,6 +95,7 @@ export default function Login() {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <Form method="post" className="space-y-6">
+            <input name="redirect-path" readOnly hidden value={redirectPath} />
             <div>
               <label
                 htmlFor="email"
@@ -114,7 +163,8 @@ export default function Login() {
 
             <div>
               <button
-                type="submit"
+                value={LoginType.UsernamePassword}
+                name="login-type"
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 Sign in
@@ -140,6 +190,8 @@ export default function Login() {
                   <input name="redirect-path" readOnly hidden value={redirectPath} />
 
                   <button
+                    name="login-type"
+                    value={LoginType.Google}
                     className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
                   >
                     <span className="sr-only">Sign in with Google</span>
@@ -165,7 +217,7 @@ export default function Login() {
                 to="/register"
                 className="text-sm font-medium text-blue-600 hover:text-blue-500"
               >
-                Don't have an account? Sign up
+                Don&apos;t have an account? Sign up
               </Link>
             </div>
           </div>

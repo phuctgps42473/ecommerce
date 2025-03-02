@@ -1,12 +1,11 @@
 import { ActionFunctionArgs, redirect } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import { TokensResponse } from "~/authentication/types";
-import { apiFetcher } from "~/utils/fetcher.server";
+import  apiFetcher  from "~/utils/fetcher.server";
 import { cookieAPI, sessionAPI } from "~/utils/token.server";
 
 export async function action({ request }: ActionFunctionArgs) {
   const form = await request.formData();
-
 
   try {
     const res = await apiFetcher("/admin/authenticate", {
@@ -18,7 +17,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
     const session = await sessionAPI.getSession(request.headers.get("Cookie"));
     session.set("access_token", accessToken);
-    return redirect("/admin", {
+    return redirect("/admin/dashboard", {
       headers: [
         ["Set-Cookie", await sessionAPI.commitSession(session)],
         ["Set-Cookie", await cookieAPI.serialize(refreshToken, { maxAge: refreshTokenExpiresInSecond })]

@@ -1,6 +1,14 @@
 import { Form, Link } from "@remix-run/react";
+import { UserInfo } from "~/types/user";
+import { useState } from "react";
 
-export default function Header() {
+export default function Header({ userInfo }: { userInfo?: UserInfo }) {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
   return (
     <header className="bg-base-100 sticky top-0 z-50">
       <div className="navbar max-w-7xl mx-auto px-4">
@@ -53,18 +61,18 @@ export default function Header() {
             eShop
           </Link>
           <div className="flex-1 justify-end items-center hidden lg:flex">
-              <div className="mr-4">
-                <Form action="/products" method="get">
-                  <div className="form-control">
-                    <input
-                      type="text"
-                      name="q"
-                      placeholder="Search"
-                      className="input input-bordered w-full"
-                    />
-                  </div>
-                </Form>
-              </div>
+            <div className="mr-4">
+              <Form action="/products" method="get">
+                <div className="form-control">
+                  <input
+                    type="text"
+                    name="q"
+                    placeholder="Search"
+                    className="input input-bordered w-full"
+                  />
+                </div>
+              </Form>
+            </div>
             <ul className="menu menu-horizontal px-1">
               <li>
                 <Link to="/">Home</Link>
@@ -99,10 +107,44 @@ export default function Header() {
               <span className="badge badge-sm indicator-item">0</span>
             </div>
           </Link>
-          <Link to="/login" className="btn btn-ghost">Login</Link>
+          {/* Mobile User Dropdown/Login */}
+          {userInfo ? (
+            <div className="dropdown dropdown-end">
+              <label
+                tabIndex={0}
+                className="btn btn-ghost btn-circle avatar"
+                onClick={toggleDropdown}
+              >
+                <div className="w-8 rounded-full">
+                  <img
+                    src={userInfo.imageUrl || "/default-avatar.png"}
+                    alt="User Avatar"
+                  />
+                </div>
+              </label>
+              <ul
+                tabIndex={0}
+                className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
+              >
+                <li>
+                  <Link to="/profile">Profile</Link>
+                </li>
+                <li>
+                  <Form action="/logout" method="post">
+                    <button type="submit">Logout</button>
+                  </Form>
+                </li>
+              </ul>
+            </div>
+          ) : (
+            <Link to="/login" className="btn btn-ghost">
+              Login
+            </Link>
+          )}
         </div>
-        <div className="hidden lg:flex">
-           <Link to="/cart" className="btn btn-ghost btn-circle">
+
+        <div className="hidden lg:flex items-center">
+          <Link to="/cart" className="btn btn-ghost btn-circle">
             <div className="indicator">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -121,7 +163,43 @@ export default function Header() {
               <span className="badge badge-sm indicator-item">0</span>
             </div>
           </Link>
-          <Link to="/login" className="btn btn-ghost">Login</Link>
+
+          {/* Desktop User Dropdown/Login */}
+          {userInfo ? (
+            <div className="dropdown dropdown-end">
+              <label
+                tabIndex={0}
+                className="btn btn-ghost btn-circle avatar"
+                onClick={toggleDropdown}
+              >
+                <div className="w-10 rounded-full">
+                  <img
+                    src={userInfo.imageUrl || "/default-avatar.png"}
+                    alt="User Avatar"
+                  />
+                </div>
+              </label>
+              <ul
+                tabIndex={0}
+                className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52"
+              >
+                <li>
+                  <Link to="/profile">Profile</Link>
+                </li>
+                <li>
+                  <Form action="/logout" method="post">
+                    <button type="submit" className="w-full text-left">
+                      Logout
+                    </button>
+                  </Form>
+                </li>
+              </ul>
+            </div>
+          ) : (
+            <Link to="/login" className="btn btn-ghost">
+              Login
+            </Link>
+          )}
         </div>
       </div>
     </header>

@@ -2,7 +2,6 @@ import { useLoaderData } from "@remix-run/react";
 import type { MetaFunction, LoaderFunction } from "@remix-run/node";
 
 import ProductCard from "~/components/ProductCard";
-import type { Product } from "~/types";
 
 export const meta: MetaFunction = () => {
   return [
@@ -14,12 +13,8 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-type LoaderData = {
-  products: Product[];
-};
-
-const getProducts = async (): Promise<Product[]> => {
-  const products: Product[] = [
+const getProducts = async (): Promise<any> => {
+  const products = [
     {
       id: "1",
       name: "Keychron K2",
@@ -107,12 +102,12 @@ const getProducts = async (): Promise<Product[]> => {
 
 export const loader: LoaderFunction = async () => {
   const products = await getProducts();
-  const data: LoaderData = { products };
+  const data = { products };
   return Response.json(data);
 };
 
 export default function Products() {
-  const { products } = useLoaderData<LoaderData>();
+  const { products } = useLoaderData();
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

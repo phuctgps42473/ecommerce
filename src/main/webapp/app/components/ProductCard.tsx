@@ -1,17 +1,11 @@
-type Product = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  imageUrl: string;
-};
+import { PreviewProduct } from "~/types/product";
 
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({ product }: { product: PreviewProduct }) {
   return (
-    <a href={`/products/${product.id}`} className="group">
+    <a href={`/products/${product.slug}`} className="group">
       <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8">
         <img
-          src={product.imageUrl}
+          src={product.image || ""}
           alt={product.name}
           className="h-full w-full object-cover object-center group-hover:opacity-75"
         />

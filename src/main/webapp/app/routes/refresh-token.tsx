@@ -1,21 +1,19 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
-import { apiFetcher } from "~/utils/fetcher.server";
+import { LoaderFunctionArgs, redirect } from "@remix-run/node";
+import  apiFetcher  from "~/utils/fetcher.server";
 import { getRefreshToken } from "~/utils/token.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  console.log("Request", request);
   const refreshToken = await getRefreshToken(request);
-  console.log(refreshToken);
 
 
   if (refreshToken === null) {
-    return new Response(null, {status: 403});
+    return redirect("/login", {status: 403});
   }
 
   try {
     const res = await apiFetcher("/refresh-token", {
       headers: {
-        "Cookie": refreshToken
+
       }
     });
 

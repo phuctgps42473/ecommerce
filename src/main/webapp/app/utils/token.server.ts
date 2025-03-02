@@ -7,9 +7,12 @@ export const cookieAPI = createCookie("refresh_token", {
   httpOnly: true,
 });
 
+export function setRefreshToken(refreshToken: string, maxAge: number) {
+  return cookieAPI.serialize(refreshToken, { maxAge })
+}
+
 
 export async function getRefreshToken(request: Request): Promise<string | null> {
-  console.log(request);
   const cookieHeader = request.headers.get("Cookie");
 
   if (cookieHeader === null) {
@@ -24,6 +27,11 @@ export async function getRefreshToken(request: Request): Promise<string | null> 
   }
 }
 
+export async function getSessionData<T>(request: Request, name: string): Promise<T | null> {
+  const session = await sessionAPI.getSession(request.headers.get("Cookie"));
+  return session.get(name);
+}
+
 export const sessionAPI = createCookieSessionStorage({
   cookie: {
     name: "__session",
@@ -36,14 +44,13 @@ export const sessionAPI = createCookieSessionStorage({
   }
 });
 
-export async function getAccessToken(request: Request): Promise<string | null> {
-  const cookieHeader = request.headers.get("Cookie");
-  if (cookieHeader === null) {
-    return null;
-  }
+export async function setAccessToken(request: Request, accessToken: string) {
+  const session = await sessionAPI.getSession(request.headers.get("Cookie"));
+  session.set("access_token", accessToken);
+}
 
-  const session = await sessionAPI.getSession(cookieHeader);
-  console.log(session.data);
+export async function getAccessToken(request: Request): Promise<string | null> {
+  const session = await sessionAPI.getSession(request.headers.get("Cookie"));
   return session.data["access_token"] || null;
 }
 
